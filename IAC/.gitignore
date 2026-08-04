@@ -1,0 +1,53 @@
+# === Terraform ===
+
+# 本地缓存目录(可删,init 重建)
+**/.terraform/*
+
+# state 文件(含敏感信息,勿提交)
+*.tfstate
+*.tfstate.*
+
+# state 锁信息文件
+.terraform.tfstate.lock.info
+
+# 变量文件(含密钥/密码);仅 00-infra 含 UCloud 密钥,需隐藏;.example 模板保留
+live/cn-wlcb/00-infra/terraform.tfvars
+live/cn-wlcb/00-infra/terraform.tfvars.json
+!*.tfvars.example
+
+# 崩溃日志
+crash.log
+crash.*.log
+
+# plan 输出
+*.tfplan
+tfplan
+*.plan
+
+# override 文件(本地临时覆盖)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI 配置文件(可能含 token)
+.terraformrc
+terraform.rc
+
+# 锁文件保留提交(下面这行不忽略):
+!.terraform.lock.hcl
+
+# === 其他敏感 / 生成文件 ===
+
+# kubeconfig
+*.kubeconfig
+kubeconfig
+
+# 密钥 / 证书
+*.pem
+*.key
+
+# === 系统 / 编辑器 ===
+.DS_Store
+*.swp
+*~

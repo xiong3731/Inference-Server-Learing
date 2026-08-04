@@ -1,0 +1,24 @@
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/ucloud/ucloud" {
+  version     = "1.39.5"
+  constraints = "~> 1.38"
+  hashes = [
+    "h1:ZjbLFK6A78unV6IU4UY9v7dZwaxmAKxvy1jtYvtel6E=",
+    "zh:034f18cd581cd39fb7dbdc9c266e959de2e596bca71f56f90126df8e98fffb30",
+    "zh:1807dec06b21ce55a4574f61b1da4792cb7c3727af50432770606fcb6d8eec38",
+    "zh:1e388ce61c71f5de4a920a76a3a2d34f18c0e01c80453a55de2f701e198bf41e",
+    "zh:27a07b4c5395f8810e2639470a8006c57f30c256cde832fe5f26a001d88d284f",
+    "zh:3dcb7302783fba7e532dc26968d460169b735c0ddfd3e949ac48ca94a2e0dee8",
+    "zh:8475d07f1020f1257b41c3d57b38e3f368565bf2b77f97c1560e7fda8b6d28f2",
+    "zh:87a3e699062ee1089013316d6db928b74d39b83df486a411764bb92ac737ce0b",
+    "zh:894eeacea978fbeebedf552dc527c6956447719813b8244b69a2a856d37aef0b",
+    "zh:8c2624b905601d8a8da14d34c3784c3477f939844450d533e380ef5e43997eb1",
+    "zh:92597c10547b55dee312167176fac0f51dbe99c55511f92236e0f5a0011364ae",
+    "zh:a0462e354cbe918ebe40529cf3868df59a575c8f845b6d32db1becec32059060",
+    "zh:bf11a17880a9917623847a40f031aa07c312885f52dda1a54ae483258421e1de",
+    "zh:c3307a5e24da953513b1405f7a7902b53e47ca480d2cf4534e7f54502cee51c3",
+    "zh:f067b208f68ca24c3f0a80407e191d4359a8e1455293753e2eeb5dd8b0ed904f",
+  ]
+}

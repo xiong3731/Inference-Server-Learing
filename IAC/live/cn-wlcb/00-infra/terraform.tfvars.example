@@ -1,0 +1,22 @@
+# 复制为 terraform.tfvars 并填入真实值。
+# terraform.tfvars 已被 .gitignore 忽略,请勿提交。
+# 敏感项也可改用环境变量:export TF_VAR_ucloud_private_key=...
+
+# ---------- 认证(敏感)----------
+ucloud_public_key  = "<UCLOUD_PUBLIC_KEY>"
+ucloud_private_key = "<UCLOUD_PRIVATE_KEY>"
+ucloud_project_id  = "<PROJECT_ID>"
+
+# ---------- 地域 ----------
+region            = "cn-wlcb"
+availability_zone = "cn-wlcb-01"
+name_prefix       = "tf"
+
+# ---------- 主机 ----------
+root_password  = "<ROOT_PASSWORD>"
+ssh_public_key = "<SSH_PUBLIC_KEY>"
+
+# ---------- UK8S ----------
+uk8s_password = "<UK8S_PASSWORD>"
+
+# 可选覆盖:uk8s_image_name_regex = "^Ubuntu 24.04"

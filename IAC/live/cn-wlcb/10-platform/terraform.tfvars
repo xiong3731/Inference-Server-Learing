@@ -1,0 +1,29 @@
+# kubeconfig 路径(默认 ../kubeconfig,即地域目录下)
+kubeconfig_path    = "../kubeconfig"
+kubeconfig_context = ""
+
+device_plugin_enabled = false
+
+# gpu-operator(Helm)
+gpu_operator_enabled        = true
+gpu_operator_chart_version  = "v26.3.3"
+gpu_operator_driver_enabled = true
+
+# prometheus(Helm)
+prometheus_enabled       = false
+prometheus_chart_version = "29.18.0"
+prometheus_storage_class = "csi-udisk-rssd"
+
+# grafana(Helm)
+grafana_enabled        = false
+grafana_chart_version  = "10.5.15"
+grafana_storage_class  = "csi-udisk-rssd"
+grafana_admin_user     = "admin"
+grafana_admin_password = "admin123"
+
+# kube-prometheus-stack(Helm)—— 取代上面独立的 prometheus/grafana
+kps_enabled                = true
+kps_chart_version          = "87.17.0"
+kps_storage_class          = "csi-udisk-rssd"
+kps_grafana_admin_user     = "admin"
+kps_grafana_admin_password = "admin123"
