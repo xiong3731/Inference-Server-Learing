@@ -39,7 +39,7 @@ resource "ucloud_eip" "web" {
   name          = "${var.name_prefix}-web-eip"
   tag           = var.name_prefix
   bandwidth     = var.eip_bandwidth
-  internet_type = "bgp"
+  internet_type = "international" # hk 海外区域不支持 bgp,国内区域改回 "bgp"
   charge_mode   = "bandwidth"
   charge_type   = "dynamic"
 }

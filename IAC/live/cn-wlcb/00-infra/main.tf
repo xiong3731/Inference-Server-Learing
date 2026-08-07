@@ -5,9 +5,6 @@ data "ucloud_images" "ubuntu" {
   image_type        = "base"
 }
 
-# 查询可用区(UK8S master 需要 3 个)
-data "ucloud_zones" "default" {}
-
 locals {
   # ---------- UK8S 节点规格(直接写在代码里)----------
   # master:系统盘 40G,无数据盘
@@ -75,7 +72,7 @@ module "uk8s" {
   vpc_id            = module.network.vpc_id
   subnet_id         = module.network.subnet_id
   availability_zone = var.availability_zone
-  master_zones      = [for _ in range(3) : data.ucloud_zones.default.zones[0].id]
+  master_zones      = [for _ in range(3) : var.availability_zone] # hk-01 无 UHost 镜像,master 须与节点同区
   service_cidr      = var.uk8s_service_cidr
   password          = var.uk8s_password
   k8s_version       = var.uk8s_k8s_version
