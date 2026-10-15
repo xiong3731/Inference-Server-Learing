@@ -37,10 +37,16 @@ variable "k8s_version" {
   type = string
 }
 
-variable "image_name_regex" {
-  description = "UK8S 节点镜像名称正则(用 ucloud_uk8s_images 查询匹配)"
+variable "image_id" {
+  description = "UK8S node 镜像 ID(worker 块与 ucloud_uk8s_node 用)。留空由 UCloud 随机选可用基础镜像"
   type        = string
-  default     = "^Ubuntu 24.04"
+  default     = ""
+}
+
+variable "master_image_id" {
+  description = "UK8S master 镜像 ID,覆盖 cluster 级 image_id。留空则 master 与 node 同镜像"
+  type        = string
+  default     = ""
 }
 
 variable "ssh_public_key" {
@@ -109,12 +115,6 @@ variable "node_boot_disk_type" {
   default = "cloud_rssd"
 }
 
-variable "node_boot_disk_size" {
-  description = "worker 系统盘大小 GB,0 表示用默认"
-  type        = number
-  default     = 0
-}
-
 variable "node_data_disk_type" {
   type    = string
   default = "cloud_rssd"
@@ -126,7 +126,7 @@ variable "node_data_disk_size" {
 }
 
 # ---------- GPU 节点池(异构,每池独立规格)----------
-# key = 池名(用于节点命名与 for_each),value = 该池规格
+# key = 池名,value = 该池规格。落到 cluster 的 worker 块上
 variable "gpu_node_pools" {
   description = "GPU 节点池。每个池独立配置数量/卡数/CPU/内存/磁盘,支持异构"
   type = map(object({

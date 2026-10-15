@@ -19,4 +19,6 @@ ssh_public_key = "<SSH_PUBLIC_KEY>"
 # ---------- UK8S ----------
 uk8s_password = "<UK8S_PASSWORD>"
 
-# 可选覆盖:uk8s_image_name_regex = "^Ubuntu 24.04"
+# 镜像 ID 分分区:换地域要重新查。master / node 可分别指定
+uk8s_master_image_id = "uimage-f4pwzt"
+uk8s_node_image_id   = "uimage-16ayzvk7btmf"

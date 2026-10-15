@@ -88,11 +88,12 @@ cp -r live/cn-wlcb live/cn-bj2
 # 改各层 terraform.tfvars 里的 region / AZ / CIDR / 机型,modules 不动
 ```
 
-## 已知限制(UCloud provider)
+## 已知限制(UCloud provider ~> 1.47)
 
 - **UK8S 集群不导出 kubeconfig**:见上文"鉴权说明",用本地文件鉴权。
-- **UK8S 节点系统盘大小**:部分机型无 `boot_disk_size`,用镜像默认。
-- **UK8S 专用镜像**(GPU 等)需用 `ucloud_uk8s_images` data source 按名字正则查询。
+- **镜像 ID 必须写死**:官方 provider 没有 UK8S 镜像数据源,`uk8s_image_id` 手填(镜像 ID 分分区,换区要改)。
+- **CPU worker 系统盘大小不可调**:`ucloud_uk8s_node` 没有 `boot_disk_size`,用 API 默认值(master 和 GPU worker 块有)。
+- **GPU 池落在 cluster 的 `worker` 块**:官方只有这里支持 `gpu`/`gpu_type`。两个代价:worker 块是 ForceNew,改 GPU 池规格或数量会重建整个集群;worker 块没有 `init_script`,GPU 节点拿不到开机脚本。
 
 ## 进阶(可选)
 

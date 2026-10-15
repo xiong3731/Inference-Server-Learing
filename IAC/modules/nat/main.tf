@@ -3,7 +3,7 @@ resource "ucloud_eip" "nat" {
   name          = "${var.name_prefix}-nat-eip"
   tag           = var.name_prefix
   bandwidth     = var.eip_bandwidth
-  internet_type = "international" # hk 海外区域不支持 bgp,国内区域改回 "bgp"
+  internet_type = "bgp" # 国内区域用 bgp;海外区域(hk 等)不支持 bgp,改 "international"
   charge_mode   = "bandwidth"
   charge_type   = "dynamic"
 }

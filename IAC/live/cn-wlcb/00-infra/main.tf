@@ -8,12 +8,12 @@ data "ucloud_images" "ubuntu" {
 locals {
   # ---------- UK8S 节点规格(直接写在代码里)----------
   # master:系统盘 40G,无数据盘
-  uk8s_master = { cpu = 4, memory = 8192, machine_type = "O", boot_disk_size = 40 }
+  uk8s_master = { cpu = 8, memory = 16384, machine_type = "O", boot_disk_size = 40 }
 
-  # CPU worker 池(同构):系统盘 100G,数据盘 200G
+  # CPU worker 池(同构):数据盘 200G,系统盘用官方默认
   uk8s_cpu_worker = {
-    count          = 4, cpu = 4, memory = 16384, machine_type = "O"
-    boot_disk_size = 100, data_disk_size = 200
+    count          = 3, cpu = 4, memory = 16384, machine_type = "O"
+    data_disk_size = 200
   }
 
   # GPU worker 池(异构:每池独立规格,数量可大):系统盘 100G,数据盘 200G
@@ -72,11 +72,12 @@ module "uk8s" {
   vpc_id            = module.network.vpc_id
   subnet_id         = module.network.subnet_id
   availability_zone = var.availability_zone
-  master_zones      = [for _ in range(3) : var.availability_zone] # hk-01 无 UHost 镜像,master 须与节点同区
+  master_zones      = [for _ in range(3) : var.availability_zone] # master 三节点同区
   service_cidr      = var.uk8s_service_cidr
   password          = var.uk8s_password
   k8s_version       = var.uk8s_k8s_version
-  image_name_regex  = var.uk8s_image_name_regex
+  image_id          = var.uk8s_node_image_id
+  master_image_id   = var.uk8s_master_image_id
   ssh_public_key    = var.ssh_public_key
 
   # master 规格
@@ -90,7 +91,6 @@ module "uk8s" {
   node_cpu            = local.uk8s_cpu_worker.cpu
   node_memory         = local.uk8s_cpu_worker.memory
   node_machine_type   = local.uk8s_cpu_worker.machine_type
-  node_boot_disk_size = local.uk8s_cpu_worker.boot_disk_size
   node_data_disk_size = local.uk8s_cpu_worker.data_disk_size
 
   # GPU worker 池(异构 map)

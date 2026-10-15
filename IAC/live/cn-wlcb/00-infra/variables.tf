@@ -81,11 +81,17 @@ variable "uk8s_service_cidr" {
 
 variable "uk8s_k8s_version" {
   type    = string
-  default = "1.34.5"
+  default = "1.26.7"
 }
 
-variable "uk8s_image_name_regex" {
-  description = "UK8S 节点镜像名称正则(用 ucloud_uk8s_images 查询)"
+variable "uk8s_master_image_id" {
+  description = "UK8S master 镜像 ID(cn-wlcb-01 的 CentOS 7.6 UK8S GPU)。镜像 ID 分分区,换区要改"
   type        = string
-  default     = "^Ubuntu 24.04"
+  default     = "uimage-f4pwzt"
+}
+
+variable "uk8s_node_image_id" {
+  description = "UK8S node 镜像 ID(cn-wlcb-01 的 Ubuntu 20.04 UK8S GPU)。镜像 ID 分分区,换区要改"
+  type        = string
+  default     = "uimage-16ayzvk7btmf"
 }
