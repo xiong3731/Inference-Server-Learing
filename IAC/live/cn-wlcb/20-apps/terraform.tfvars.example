@@ -1,0 +1,7 @@
+# 复制为 terraform.tfvars 并填入真实值。
+# terraform.tfvars 已被 .gitignore 忽略,请勿提交。
+# 敏感项也可改用环境变量:export TF_VAR_s3_secret_access_key=...
+
+# ---------- UFile S3 凭证(敏感)----------
+s3_access_key_id     = "<UFILE_ACCESS_KEY>"
+s3_secret_access_key = "<UFILE_SECRET_KEY>"

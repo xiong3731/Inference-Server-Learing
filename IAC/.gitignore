@@ -10,10 +10,12 @@
 # state 锁信息文件
 .terraform.tfstate.lock.info
 
-# 变量文件(含密钥/密码);仅 00-infra 含 UCloud 密钥,需隐藏;.example 模板保留
-live/cn-wlcb/00-infra/terraform.tfvars
-live/cn-wlcb/00-infra/terraform.tfvars.json
+# 变量文件(含密钥/密码):所有层、所有地域的 terraform.tfvars 一律不提交,只留 .example 模板。
+# 用通配而非写死路径,否则 cp -r live/cn-wlcb live/其他地域 出来的新目录会漏掉。
+*.tfvars
+*.tfvars.json
 !*.tfvars.example
+!*.tfvars.json.example
 
 # 崩溃日志
 crash.log

@@ -84,16 +84,14 @@ variable "model_s3_uri" {
 # 安全提示:生产请通过 terraform.tfvars(已 gitignore)或环境变量
 # TF_VAR_s3_access_key_id / TF_VAR_s3_secret_access_key 注入,勿提交明文。
 variable "s3_access_key_id" {
-  description = "UFile Access Key(TOKEN)"
+  description = "UFile Access Key(TOKEN)。从 terraform.tfvars 或 TF_VAR_s3_access_key_id 提供,勿写默认值"
   type        = string
-  default     = "TOKEN_04f46c16-332b-45ef-9f81-eb62db8273c1"
   sensitive   = true
 }
 
 variable "s3_secret_access_key" {
-  description = "UFile Secret Key"
+  description = "UFile Secret Key。从 terraform.tfvars 或 TF_VAR_s3_secret_access_key 提供,勿写默认值"
   type        = string
-  default     = "804805d5-723b-4aa4-ab6e-d872a5d7899a"
   sensitive   = true
 }
 
