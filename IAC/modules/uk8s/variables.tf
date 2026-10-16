@@ -50,8 +50,8 @@ variable "master_image_id" {
 }
 
 variable "ssh_public_key" {
-  description = "注入 master/worker 的 SSH 公钥"
-  type        = string
+  description = "注入 master/worker 的 SSH 公钥列表"
+  type        = list(string)
 }
 
 # ---------- master 规格(cpu/memory/machine_type 三元组)----------
@@ -85,44 +85,21 @@ variable "master_boot_disk_size" {
   default     = 40
 }
 
-# ---------- worker 节点规格 ----------
-variable "node_count" {
-  description = "worker 节点数量"
-  type        = number
-  default     = 2
-}
-
-variable "node_cpu" {
-  description = "worker CPU 核数"
-  type        = number
-  default     = 4
-}
-
-variable "node_memory" {
-  description = "worker 内存 MB"
-  type        = number
-  default     = 16384
-}
-
-variable "node_machine_type" {
-  description = "CPU worker 机器类型:N / C / O / OS"
-  type        = string
-  default     = "O"
-}
-
-variable "node_boot_disk_type" {
-  type    = string
-  default = "cloud_rssd"
-}
-
-variable "node_data_disk_type" {
-  type    = string
-  default = "cloud_rssd"
-}
-
-variable "node_data_disk_size" {
-  type    = number
-  default = 100
+# ---------- CPU worker 节点池(异构,每池独立规格/镜像)----------
+# key = 池名,value = 该池规格。每池落在独立的 ucloud_uk8s_node 上(为了保住 init_script)
+variable "cpu_node_pools" {
+  description = "CPU worker 节点池。每个池独立配置数量/规格/镜像,支持异构"
+  type = map(object({
+    count          = number
+    cpu            = number
+    memory         = number            # MB
+    machine_type   = optional(string, "O")
+    image_id       = optional(string, "") # 留空继承 cluster 级 image_id
+    boot_disk_type = optional(string, "cloud_rssd")
+    data_disk_type = optional(string, "cloud_rssd")
+    data_disk_size = optional(number, 100)
+  }))
+  default = {}
 }
 
 # ---------- GPU 节点池(异构,每池独立规格)----------

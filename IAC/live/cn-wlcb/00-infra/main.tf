@@ -10,10 +10,19 @@ locals {
   # master:系统盘 40G,无数据盘
   uk8s_master = { cpu = 8, memory = 16384, machine_type = "O", boot_disk_size = 40 }
 
-  # CPU worker 池(同构):数据盘 200G,系统盘用官方默认
-  uk8s_cpu_worker = {
-    count          = 3, cpu = 4, memory = 16384, machine_type = "O"
-    data_disk_size = 200
+  # CPU worker 池(异构:每池独立规格与镜像,加池在这里加一项)
+  # 系统盘用官方默认 —— ucloud_uk8s_node 没有 boot_disk_size
+  uk8s_cpu_pools = {
+    ubuntu = {
+      count          = 3, cpu = 4, memory = 16384, machine_type = "O"
+      image_id       = var.uk8s_node_image_id
+      data_disk_size = 200
+    }
+    centos = {
+      count          = 3, cpu = 4, memory = 16384, machine_type = "O"
+      image_id       = var.uk8s_node_image_id_centos
+      data_disk_size = 200
+    }
   }
 
   # GPU worker 池(异构:每池独立规格,数量可大):系统盘 100G,数据盘 200G
@@ -86,12 +95,8 @@ module "uk8s" {
   master_machine_type   = local.uk8s_master.machine_type
   master_boot_disk_size = local.uk8s_master.boot_disk_size
 
-  # CPU worker 池
-  node_count          = local.uk8s_cpu_worker.count
-  node_cpu            = local.uk8s_cpu_worker.cpu
-  node_memory         = local.uk8s_cpu_worker.memory
-  node_machine_type   = local.uk8s_cpu_worker.machine_type
-  node_data_disk_size = local.uk8s_cpu_worker.data_disk_size
+  # CPU worker 池(异构 map)
+  cpu_node_pools = local.uk8s_cpu_pools
 
   # GPU worker 池(异构 map)
   gpu_node_pools = local.uk8s_gpu_pools

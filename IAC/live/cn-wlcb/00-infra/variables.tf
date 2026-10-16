@@ -58,8 +58,8 @@ variable "root_password" {
 }
 
 variable "ssh_public_key" {
-  description = "注入主机 / UK8S 节点的 SSH 公钥"
-  type        = string
+  description = "注入主机 / UK8S 节点的 SSH 公钥列表,全部追加到 root 的 authorized_keys"
+  type        = list(string)
 }
 
 variable "uhost_private_ip" {
@@ -91,7 +91,13 @@ variable "uk8s_master_image_id" {
 }
 
 variable "uk8s_node_image_id" {
-  description = "UK8S node 镜像 ID(cn-wlcb-01 的 Ubuntu 20.04 UK8S GPU)。镜像 ID 分分区,换区要改"
+  description = "UK8S node 池 1(ubuntu)的镜像 ID(cn-wlcb-01 的 Ubuntu 20.04 UK8S GPU),同时作为集群级默认镜像"
   type        = string
   default     = "uimage-16ayzvk7btmf"
+}
+
+variable "uk8s_node_image_id_centos" {
+  description = "UK8S node 池 2(centos)的镜像 ID(cn-wlcb-01 的 CentOS 7.6 UK8S)"
+  type        = string
+  default     = "uimage-1wdq0b0l3lpz"
 }

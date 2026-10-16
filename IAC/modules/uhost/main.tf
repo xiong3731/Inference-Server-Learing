@@ -11,7 +11,9 @@ resource "ucloud_instance" "web" {
   user_data = <<-EOT
     #cloud-config
     ssh_authorized_keys:
-      - ${var.ssh_public_key}
+    %{ for key in var.ssh_public_key ~}
+      - ${key}
+    %{ endfor ~}
   EOT
 
   # 网络(不启用安全组)

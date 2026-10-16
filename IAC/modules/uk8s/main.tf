@@ -1,29 +1,41 @@
 locals {
   # containerd 镜像仓库配置:切到 certs.d 的 host 目录式配置(便于配镜像加速/私有仓库)。
   # master 与 CPU worker 统一注入。
-  containerd_registry_setup = <<-EOT
-    cat > /etc/containerd/config.toml <<EOF
-    version = 3
-    imports = ["/etc/containerd/conf.d/*.toml"]
-
-    [plugins.'io.containerd.cri.v1.images'.registry]
-      config_path = "/etc/containerd/certs.d"
-    EOF
-    mkdir -p /etc/containerd/certs.d
-  EOT
+  # 已停用:节点改用镜像自带的 containerd 配置。
+  # 要恢复:把下面整段取消注释,同时放开 init_script 里标注「containerd」的两行。
+  # containerd_registry_setup = <<-EOT
+  #   cat > /etc/containerd/config.toml <<EOF
+  #   version = 3
+  #   imports = ["/etc/containerd/conf.d/*.toml"]
+  #
+  #   [plugins.'io.containerd.cri.v1.images'.registry]
+  #     config_path = "/etc/containerd/certs.d"
+  #   EOF
+  #   mkdir -p /etc/containerd/certs.d
+  # EOT
 
   # 注入 SSH 公钥的开机脚本(master 与 CPU worker 共用)
   init_script = <<-EOT
     #!/bin/bash
     mkdir -p /root/.ssh
-    echo "${var.ssh_public_key}" >> /root/.ssh/authorized_keys
+    %{ for key in var.ssh_public_key ~}
+    echo "${key}" >> /root/.ssh/authorized_keys
+    %{ endfor ~}
     chmod 600 /root/.ssh/authorized_keys
-    ${local.containerd_registry_setup}
-    systemctl restart containerd
+    # containerd:原为 写 config.toml + mkdir certs.d,已停用
+    # systemctl restart containerd
   EOT
 
   # 只有 count > 0 的 GPU 池才生成 worker 块(旧代码里 count=0 等价于不建节点)
   gpu_worker_pools = { for name, pool in var.gpu_node_pools : name => pool if pool.count > 0 }
+
+  # 把 CPU 池展开成"每台节点一个实例"的扁平 map,key 形如 "ubuntu-0" / "centos-2"
+  cpu_nodes = merge([
+    for pool_name, pool in var.cpu_node_pools : {
+      for i in range(pool.count) :
+      "${pool_name}-${i}" => merge(pool, { pool = pool_name })
+    }
+  ]...)
 }
 
 resource "ucloud_uk8s_cluster" "main" {
@@ -75,25 +87,25 @@ resource "ucloud_uk8s_cluster" "main" {
   }
 }
 
-# CPU worker 节点池:同构,统一规格 + count
+# CPU worker 节点:异构,for_each 遍历展开后的每台节点
 # 用 ucloud_uk8s_node 而不是 cluster 的 worker 块,是为了保住 init_script:
 # 官方 worker 块没有 init_script,而 ucloud_uk8s_node 没有 boot_disk_size(系统盘用 API 默认值)。
 resource "ucloud_uk8s_node" "cpu" {
-  count = var.node_count
+  for_each = local.cpu_nodes
 
   cluster_id        = ucloud_uk8s_cluster.main.id
   availability_zone = var.availability_zone
   subnet_id         = var.subnet_id
-  image_id          = var.image_id
-  cpu               = var.node_cpu
-  memory            = var.node_memory
-  machine_type      = var.node_machine_type
+  image_id          = each.value.image_id != "" ? each.value.image_id : var.image_id
+  cpu               = each.value.cpu
+  memory            = each.value.memory
+  machine_type      = each.value.machine_type
   password          = var.password
   charge_type       = "dynamic"
-  boot_disk_type    = var.node_boot_disk_type
+  boot_disk_type    = each.value.boot_disk_type
 
-  data_disk_type             = var.node_data_disk_type
-  data_disk_size             = var.node_data_disk_size
+  data_disk_type             = each.value.data_disk_type
+  data_disk_size             = each.value.data_disk_size
   delete_disks_with_instance = true
 
   init_script = local.init_script

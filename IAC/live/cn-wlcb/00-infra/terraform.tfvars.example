@@ -13,12 +13,17 @@ availability_zone = "cn-wlcb-01"
 name_prefix       = "tf"
 
 # ---------- 主机 ----------
-root_password  = "<ROOT_PASSWORD>"
-ssh_public_key = "<SSH_PUBLIC_KEY>"
+root_password = "<ROOT_PASSWORD>"
+# 公钥列表:全部追加到 root 的 authorized_keys(UHost 走 cloud-init,UK8S 节点走 init_script)
+ssh_public_key = [
+  "<SSH_PUBLIC_KEY_1>",
+  "<SSH_PUBLIC_KEY_2>",
+]
 
 # ---------- UK8S ----------
 uk8s_password = "<UK8S_PASSWORD>"
 
-# 镜像 ID 分分区:换地域要重新查。master / node 可分别指定
-uk8s_master_image_id = "uimage-f4pwzt"
-uk8s_node_image_id   = "uimage-16ayzvk7btmf"
+# 镜像 ID 分分区:换地域要重新查。master 与两个 node 池各指定一个
+uk8s_master_image_id        = "uimage-f4pwzt"        # CentOS 7.6 UK8S GPU
+uk8s_node_image_id          = "uimage-16ayzvk7btmf"  # Ubuntu 20.04 UK8S GPU(池 ubuntu)
+uk8s_node_image_id_centos   = "uimage-1wdq0b0l3lpz"  # CentOS 7.6 UK8S(池 centos)

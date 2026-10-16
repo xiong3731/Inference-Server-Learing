@@ -17,6 +17,6 @@ output "external_api_server" {
 }
 
 output "node_ids" {
-  description = "CPU worker 节点 ID"
-  value       = ucloud_uk8s_node.cpu[*].id
+  description = "CPU worker 节点 ID(按 池名-序号 索引)"
+  value       = { for k, n in ucloud_uk8s_node.cpu : k => n.id }
 }

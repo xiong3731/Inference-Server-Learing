@@ -21,8 +21,8 @@ variable "root_password" {
 }
 
 variable "ssh_public_key" {
-  description = "注入主机的 SSH 公钥"
-  type        = string
+  description = "注入主机的 SSH 公钥列表"
+  type        = list(string)
 }
 
 variable "vpc_id" {
