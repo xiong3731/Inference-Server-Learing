@@ -1,1 +1,35 @@
+# === Terraform(与 IAC/.gitignore 对齐)===
+
+# state 文件:含所有资源属性与敏感值,任何目录下都不提交
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# 变量文件:含密钥/密码,只留 .example 模板
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+!*.tfvars.json.example
+
+# kubeconfig:含集群证书与用户凭证
+kubeconfig
+*.kubeconfig
+
+# plan 输出、崩溃日志、CLI 配置(可能含 token)
+*.tfplan
+tfplan
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+
+# 密钥 / 证书
+*.pem
+*.key
+
+# === 系统 / 编辑器 ===
 .claude/
+.DS_Store
+*.swp
+*~
